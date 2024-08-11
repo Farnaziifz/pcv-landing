@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: "dana";
+	src: url("../fonts/DanaFaNum-Regular.ttf");
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	direction: rtl;
+	font-family: "dana";
+}
+
+.DatePicker {
+	width: 100% !important;
+}
+
+.datepicker-input {
+	width: 100% !important;
+}
+
+.DatePicker__input.-rtl {
+	width: 100% !important;
+  border: none !important;
+}
