@@ -70,11 +70,7 @@ function SymptomSolitedForm() {
 										handleChange(index, "startDate", e.target.value)
 									}
 									shouldHighlightWeekends
-									style={
-										{
-											// width: "100%",
-										}
-									}
+									
 								/>
 							</div>
 						</div>

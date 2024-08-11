@@ -1,12 +1,12 @@
 import { useState } from "react";
 import logo from "./assets/image/orchid-logo-light.svg";
 import SymptomSolitedForm from "./components/SymptomSolicitedComponent";
-
+import AdverseEventForm from "./components/AdverseEventForm";
 function App() {
 	const [nationalId, setNationalId] = useState("");
 	const [mobileNumber, setMobileNumber] = useState("");
 	const [formVisible, setFormVisible] = useState(false);
-
+	const [isSolited, setIsSolited] = useState(false);
 	const handleSubmit = () => {
 		// API call to backend
 		// If successful, show the form
@@ -17,7 +17,7 @@ function App() {
 			<header className="mt-10">
 				<img src={logo} alt="Orchid Pharmed" className="h-20" />
 			</header>
-			<main className="w-full  lg: mt-10 p-6 bg-white shadow-md rounded-md">
+			<main className="w-full lg: mt-10 p-6 bg-white shadow-md rounded-md">
 				{!formVisible ? (
 					<div className="flex flex-col space-y-4">
 						<input
@@ -43,7 +43,7 @@ function App() {
 					</div>
 				) : (
 					<div className="mt-10">
-						<SymptomSolitedForm />
+						{isSolited ? <SymptomSolitedForm /> : <AdverseEventForm />}
 					</div>
 				)}
 			</main>
