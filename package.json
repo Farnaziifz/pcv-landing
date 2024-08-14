@@ -4,6 +4,8 @@
 	"private": true,
 	"dependencies": {
 		"@amir04lm26/react-modern-calendar-date-picker": "^1.0.1",
+		"@hookform/resolvers": "^2.9.7",
+		"@reduxjs/toolkit": "^1.8.3",
 		"@testing-library/jest-dom": "^5.14.1",
 		"@testing-library/react": "^13.0.0",
 		"@testing-library/user-event": "^13.2.1",
@@ -14,14 +16,13 @@
 		"query-string": "^9.0.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
+		"react-hook-form": "^7.50.1",
+		"react-redux": "^8.0.2",
+		"react-router-dom": "^6.26.0",
 		"react-scripts": "5.0.1",
 		"react-toastify": "^10.0.5",
 		"sass": "^1.77.2",
-		"web-vitals": "^2.1.0",
-		"@hookform/resolvers": "^2.9.7",
-		"@reduxjs/toolkit": "^1.8.3",
-		"react-hook-form": "^7.50.1",
-		"react-redux": "^8.0.2"
+		"web-vitals": "^2.1.0"
 	},
 	"scripts": {
 		"start": "react-scripts start",

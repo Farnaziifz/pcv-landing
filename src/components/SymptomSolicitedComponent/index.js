@@ -58,8 +58,10 @@ function SymptomSolitedForm() {
 			{selectedSymptoms.length > 0
 				? selectedSymptoms.map((symptom, index) => (
 						<>
-							<div className="mt-10">
-								<div className="mb-15">{symptom.label}</div>
+							<div className="mt-10 border border-primary rounded p-10">
+								<div className="mb-10 font-bold text-center inline-block bg-gray-200 rounded w-full p-3">
+									{symptom.label}
+								</div>
 								<div
 									key={index}
 									className="grid grid-cols-1 md:grid-cols-4 gap-4"
@@ -152,7 +154,6 @@ function SymptomSolitedForm() {
 										/>
 									</div>
 								</div>
-								<div className="w-full h-[1px] bg-primary"></div>
 							</div>
 						</>
 				  ))

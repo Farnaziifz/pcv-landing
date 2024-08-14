@@ -7,6 +7,7 @@ module.exports = {
 				secondary: "#b864a2",
 				actions: "#ed7d31",
 				white: "#fff",
+			
 			},
 		},
 		container: {
