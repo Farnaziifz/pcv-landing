@@ -6,13 +6,12 @@ import { useGetSolicitedSsymptomsQuery } from "../../resources/services/api/gene
 function SymptomSolitedForm() {
 	const { data, isLoading } = useGetSolicitedSsymptomsQuery();
 
-	console.log(data);
 	const [symptoms, setSymptom] = useState([]);
 
 	useEffect(() => {
 		if (data) {
 			const symptoms = data.map((el) => ({
-				id: el.id,
+				id: el.Id,
 				label: el.PersianTitle,
 			}));
 			setSymptom(symptoms);
@@ -22,14 +21,6 @@ function SymptomSolitedForm() {
 	const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 
 	const [formData, setFormData] = useState([]);
-
-	// symptoms.map(() => ({
-	// 	startDate: "",
-	// 	duration: "",
-	// 	severity: "",
-	// 	actionsTaken: "",
-	// 	notes: "",
-	// }));
 
 	const handleChange = (index, field, value) => {
 		console.log(index);
@@ -78,7 +69,7 @@ function SymptomSolitedForm() {
 												</div>
 											</div>
 										</div>
-										<div className="w-full">
+										<div className="w-full grid grid-cols-2 gap-4">
 											<div className="relative mb-3 mt-5">
 												<input
 													type="text"
@@ -91,6 +82,31 @@ function SymptomSolitedForm() {
 												/>
 												<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
 													طول مدت رخداد
+												</label>
+											</div>
+											<div className="relative mb-3 mt-5">
+												<select
+													value={""}
+													onChange={(e) =>
+														handleChange(index, "severity", e.target.value)
+													}
+													className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary text-xs py-3"
+												>
+													<option value="" disabled className="text-xs">
+														یک مورد را انتخاب کنید
+													</option>
+													<option value="ساعت" className="text-sm">
+														ساعت
+													</option>
+													<option value="روز" className="text-xs">
+														روز
+													</option>
+													<option value="مداوم" className="text-xs">
+														مداوم
+													</option>
+												</select>
+												<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
+													زمان مدت رخداد
 												</label>
 											</div>
 										</div>
