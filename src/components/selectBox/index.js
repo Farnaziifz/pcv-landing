@@ -1,18 +1,17 @@
 import React, { useState, useRef } from "react";
 
-const CustomSelect = ({ options, value, onChange, placeholder }) => {
+const CustomSelect = ({ options, value = [], onChange, placeholder }) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [searchTerm, setSearchTerm] = useState("");
 	const wrapperRef = useRef(null);
 
-	const filteredOptions = options?.filter((option) =>
-		option.fullname.toLowerCase().includes(searchTerm.toLowerCase())
-	);
-
 	const handleSelect = (option) => {
-		onChange(option);
-		setIsOpen(false);
-		setSearchTerm("");
+		if (value.some((selected) => selected.id === option.id)) {
+			// If option is already selected, remove it
+			onChange(value.filter((selected) => selected.id !== option.id));
+		} else {
+			// Otherwise, add it to the selected options
+			onChange([...value, option]);
+		}
 	};
 
 	const handleClickOutside = (event) => {
@@ -34,30 +33,46 @@ const CustomSelect = ({ options, value, onChange, placeholder }) => {
 				className="border rounded-lg py-2 px-3 bg-white cursor-pointer"
 				onClick={() => setIsOpen(!isOpen)}
 			>
-				{value ? value.fullname : placeholder}
+				{value.length > 0 ? (
+					<div className="flex flex-wrap gap-2">
+						{value.map((selected) => (
+							<div
+								key={selected.id}
+								className="bg-blue-500 text-white px-2 py-1 rounded-lg flex items-center gap-1"
+							>
+								{selected.label}
+								<button
+									onClick={(e) => {
+										e.stopPropagation();
+										onChange(value.filter((v) => v.id !== selected.id));
+									}}
+									className="text-white hover:text-red-500"
+								>
+									&times;
+								</button>
+							</div>
+						))}
+					</div>
+				) : (
+					placeholder
+				)}
 			</div>
 			{isOpen && (
 				<div className="absolute z-[10000] w-full mt-1 bg-white border rounded-lg shadow-lg">
-					<input
-						type="text"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-						placeholder="جستجو..."
-						className="w-full p-2 border-b"
-					/>
 					<ul className="max-h-60 overflow-y-auto">
-						{filteredOptions.map((option) => (
+						{options.map((option) => (
 							<li
-								key={option.contactid}
-								className="p-2 hover:bg-gray-200 cursor-pointer"
+								key={option.id}
+								className={`p-2 hover:bg-gray-200 cursor-pointer ${
+									value.some((selected) => selected.id === option.id)
+										? "bg-blue-100"
+										: ""
+								}`}
 								onClick={() => handleSelect(option)}
 							>
-								{option.fullname}
+								{option.label}
 							</li>
 						))}
-						{filteredOptions.length === 0 && (
-							<li className="p-2 text-gray-500">نتیجه ای یافت نشد</li>
-						)}
 					</ul>
 				</div>
 			)}
