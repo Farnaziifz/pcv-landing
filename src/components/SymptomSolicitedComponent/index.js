@@ -2,26 +2,22 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import CustomSelect from "../selectBox";
-
+import { useGetSolicitedSsymptomsQuery } from "../../resources/services/api/general.service";
 function SymptomSolitedForm() {
-	const symptoms = [
-		{ id: 1, label: "درد محل تزریق" },
-		{ id: 2, label: "سفتی محل تزریق" },
-		{ id: 3, label: "تورم محل تزریق" },
-		{ id: 4, label: "قرمزی محل تزریق" },
-		{ id: 5, label: "خارش محل تزریق" },
-		{ id: 6, label: "کبودی محل تزریق" },
-		{ id: 7, label: "کاهش اشتها" },
-		{ id: 8, label: "تب" },
-		{ id: 9, label: "استفراغ" },
-		{ id: 10, label: "اسهال" },
-		{ id: 11, label: "لرز" },
-		{ id: 12, label: "ضایعات پوستی" },
-		{ id: 13, label: "کهیر" },
-		{ id: 14, label: "بی قراری" },
-		{ id: 15, label: "تغییر در الگوی خواب" },
-		{ id: 16, label: "سایر" },
-	];
+	const { data, isLoading } = useGetSolicitedSsymptomsQuery();
+
+	console.log(data);
+	const [symptoms, setSymptom] = useState([]);
+
+	useEffect(() => {
+		if (data) {
+			const symptoms = data.map((el) => ({
+				id: el.id,
+				label: el.PersianTitle,
+			}));
+			setSymptom(symptoms);
+		}
+	}, [data]);
 
 	const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 

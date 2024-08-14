@@ -11,43 +11,15 @@ export const generalApi = apiInstance.injectEndpoints({
 			},
 		}),
 
-		getProvince: builder.query({
+		getSolicitedSsymptoms: builder.query({
 			query: () => {
 				return {
-					url: "api/Papilloguard/provinces",
-				};
-			},
-		}),
-		getCities: builder.query({
-			query: (data) => {
-				return {
-					url: `api/Papilloguard/Cities/${data}`,
-				};
-			},
-		}),
-		getPhycian: builder.query({
-			query: (dat) => {
-				return {
-					url: `api/Papilloguard/Physicians`,
-				};
-			},
-		}),
-		createPatient: builder.mutation({
-			query: (data) => {
-				return {
-					url: `api/Papilloguard/CreatePatient`,
-					method: "POST",
-					data,
+					url: `llts`,
 				};
 			},
 		}),
 	}),
 });
 
-export const {
-	useRegisterUserMutation,
-	useLazyGetProvinceQuery,
-	useLazyGetCitiesQuery,
-	useLazyGetPhycianQuery,
-	useCreatePatientMutation,
-} = generalApi;
+export const { useRegisterUserMutation, useGetSolicitedSsymptomsQuery } =
+	generalApi;
