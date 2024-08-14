@@ -5,7 +5,7 @@ export const generalApi = apiInstance.injectEndpoints({
 		registerUser: builder.mutation({
 			query: (data) => {
 				return {
-					url: `form-type?nationalCode=${data.natiohnalCode}`,
+					url: `form-type?nationalCode=${data.nationalCode}&phoneNumber=${data.phoneNumber}`,
 					method: "GET",
 				};
 			},

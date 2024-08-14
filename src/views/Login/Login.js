@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { useRegisterUserMutation } from "../../resources/services/api/general.service";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+	const navigate = useNavigate();
+
 	const [nationalId, setNationalId] = useState("");
 	const [mobileNumber, setMobileNumber] = useState("");
 	const [registerUser] = useRegisterUserMutation();
 
-	const handleSubmit = () => {
-		registerUser({ phoneNumber: mobileNumber, natiohnalCode: nationalId });
-		// setFormVisible(true);
+	const handleSubmit = async () => {
+		try {
+			const response = await registerUser({
+				phoneNumber: mobileNumber,
+				nationalCode: nationalId,
+			}).unwrap();
+
+			const { FormType } = response;
+
+			navigate(`/forms/${FormType}`, { state: { nationalId, mobileNumber } });
+		} catch (error) {
+			console.error("Failed to register user:", error);
+		}
 	};
 	return (
 		<main className="w-[360px] mt-10 p-6 bg-white shadow-md rounded-md">
