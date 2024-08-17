@@ -18,8 +18,18 @@ export const generalApi = apiInstance.injectEndpoints({
 				};
 			},
 		}),
+		getIntensities: builder.query({
+			query: (data) => {
+				return {
+					url: `intensities/${data.id}`,
+				};
+			},
+		}),
 	}),
 });
 
-export const { useRegisterUserMutation, useGetSolicitedSsymptomsQuery } =
-	generalApi;
+export const {
+	useRegisterUserMutation,
+	useGetSolicitedSsymptomsQuery,
+	useLazyGetIntensitiesQuery,
+} = generalApi;
