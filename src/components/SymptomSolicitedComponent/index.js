@@ -3,9 +3,10 @@ import DatePicker from "@amir04lm26/react-modern-calendar-date-picker";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import CustomSelect from "../selectBox";
 import { useGetSolicitedSsymptomsQuery } from "../../resources/services/api/general.service";
+import moment from "jalali-moment";
+
 function SymptomSolitedForm() {
 	const { data, isLoading } = useGetSolicitedSsymptomsQuery();
-
 	const [symptoms, setSymptom] = useState([]);
 
 	useEffect(() => {
@@ -20,17 +21,39 @@ function SymptomSolitedForm() {
 
 	const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 
-	const [formData, setFormData] = useState([]);
+	const [formData, setFormData] = useState([{}]);
 
 	const handleChange = (index, field, value) => {
-		console.log(index);
-		console.log(field);
-		console.log(value);
-		// const updatedData = [...formData];
-		// updatedData[index][field] = value;
-		// console.log(updatedData);
-		// setFormData(updatedData);
+		const updatedData = [...formData];
+		updatedData[index][field] = value;
+		setFormData(updatedData);
 	};
+
+	const showingDate = (index) => {
+		if (formData[index]?.startDate) {
+			const m = moment(formData[index]?.startDate)
+				?.format("jYYYY/jM/jD")
+				.split("/");
+			const year = +m[0];
+			const month = +m[1]; // moment-jalaali month is 0-indexed, so add 1
+			const day = +m[2];
+
+			const dateObject = {
+				year,
+				month,
+				day,
+			};
+			return dateObject;
+		} else {
+			return {
+				year: 1403,
+				month: 5,
+				day: 2,
+			};
+		}
+	};
+
+	const defaultValue = null;
 
 	return (
 		<div className="mt-15">
@@ -60,30 +83,28 @@ function SymptomSolitedForm() {
 												<div className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary">
 													<DatePicker
 														locale="fa"
-														value={formData[index]?.startDate}
-														onChange={(e) =>
-															handleChange(index, "startDate", e.target.value)
+														// value={formData[index]?.startDate}
+														value={
+															formData[index]?.startDate
+																? showingDate(index)
+																: defaultValue
 														}
+														onChange={(e) => {
+															const date = new Date(
+																moment.from(
+																	`${e.year}/${e.month}/${e.day}`,
+																	"fa"
+																	// "YYYY/MM/DD"
+																)
+															);
+															handleChange(index, "startDate", date);
+														}}
 														shouldHighlightWeekends
 													/>
 												</div>
 											</div>
 										</div>
 										<div className="w-full grid grid-cols-2 gap-4">
-											<div className="relative mb-3 mt-5">
-												<input
-													type="text"
-													placeholder=" "
-													value={""}
-													onChange={(e) =>
-														handleChange(index, "duration", e.target.value)
-													}
-													className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-												/>
-												<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
-													طول مدت رخداد
-												</label>
-											</div>
 											<div className="relative mb-3 mt-5">
 												<select
 													value={""}
@@ -106,7 +127,21 @@ function SymptomSolitedForm() {
 													</option>
 												</select>
 												<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
-													زمان مدت رخداد
+													واحد زمان رخداد
+												</label>
+											</div>
+											<div className="relative mb-3 mt-5">
+												<input
+													type="text"
+													placeholder=" "
+													value={""}
+													onChange={(e) =>
+														handleChange(index, "duration", e.target.value)
+													}
+													className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+												/>
+												<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
+													طول مدت رخداد
 												</label>
 											</div>
 										</div>
