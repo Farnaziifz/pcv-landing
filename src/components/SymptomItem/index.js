@@ -9,11 +9,22 @@ const SymptonItem = ({ symptom }) => {
 	const [formData, setFormData] = useState([{}]);
 
 	const [fetch, { data }] = useLazyGetIntensitiesQuery({ id: symptom.id });
+	const [insentitiesSeverity, setInsentitiesSeverity] = useState([]);
 
 	useEffect(() => {
 		fetch({ id: symptom.id });
 	}, [symptom.id]);
 
+	useEffect(() => {
+		data?.map((el) => {
+			insentitiesSeverity.push({
+				id: el.Id,
+				value: el.Title,
+				label: el.PersianTitle,
+				level: el.Level,
+			});
+		});
+	}, [data]);
 	const showingDate = (id) => {
 		if (formData[id]?.OnsetDate) {
 			const m = moment(formData[id]?.OnsetDate)
@@ -135,9 +146,13 @@ const SymptonItem = ({ symptom }) => {
 									<option value="" disabled>
 										یک مورد را انتخاب کنید
 									</option>
-									<option value="Grad 1">خفیف</option>
+									{insentitiesSeverity?.map((el) => {
+										console.log(el);
+										return <option value={el.value}>{el.label}</option>;
+									})}
+									{/* <option value="Grad 1">خفیف</option>
 									<option value="Grad 2">متوسط</option>
-									<option value="Grad 3">شدید</option>
+									<option value="Grad 3">شدید</option> */}
 								</select>
 								<label className="text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 									شدت رخداد
