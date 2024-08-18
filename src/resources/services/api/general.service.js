@@ -32,6 +32,15 @@ export const generalApi = apiInstance.injectEndpoints({
 				};
 			},
 		}),
+		createAdverseEvent: builder.mutation({
+			query: (data) => {
+				return {
+					url: `adverse-event/create?studyId=31&nationalCode=0074544698`,
+					method: "post",
+					data,
+				};
+			},
+		}),
 	}),
 });
 
@@ -40,4 +49,5 @@ export const {
 	useGetSolicitedSsymptomsQuery,
 	useLazyGetIntensitiesQuery,
 	useGetInterventionResultQuery,
+	useCreateAdverseEventMutation,
 } = generalApi;

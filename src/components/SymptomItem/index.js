@@ -8,11 +8,10 @@ import {
 } from "../../resources/services/api/general.service";
 
 const SymptonItem = ({ symptom }) => {
-	const [formData, setFormData] = useState([{}]);
-
 	const [fetch, { data }] = useLazyGetIntensitiesQuery({ id: symptom.id });
 	const { data: interventionResultId } = useGetInterventionResultQuery();
 	const [insentitiesSeverity, setInsentitiesSeverity] = useState([]);
+	const [date, setDate] = useState();
 
 	useEffect(() => {
 		fetch({ id: symptom.id });
@@ -20,7 +19,7 @@ const SymptonItem = ({ symptom }) => {
 
 	useEffect(() => {
 		setInsentitiesSeverity([]);
-		const test = data?.map((el) => {
+		const insentities = data?.map((el) => {
 			return {
 				id: el.Id,
 				value: el.Title,
@@ -28,15 +27,14 @@ const SymptonItem = ({ symptom }) => {
 				level: el.Level,
 			};
 		});
-		setInsentitiesSeverity(test);
+		setInsentitiesSeverity(insentities);
 	}, [data]);
-	const showingDate = (id) => {
-		if (formData[id]?.OnsetDate) {
-			const m = moment(formData[id]?.OnsetDate)
-				?.format("jYYYY/jM/jD")
-				.split("/");
+
+	const updateSelectedDate = () => {
+		if (symptom.OnsetDate) {
+			const m = moment(symptom.OnsetDate)?.format("jYYYY/jM/jD").split("/");
 			const year = +m[0];
-			const month = +m[1]; // moment-jalaali month is 0-indexed, so add 1
+			const month = +m[1];
 			const day = +m[2];
 
 			const dateObject = {
@@ -44,23 +42,14 @@ const SymptonItem = ({ symptom }) => {
 				month,
 				day,
 			};
-			return dateObject;
+			setDate(dateObject);
 		} else {
 			return null;
 		}
 	};
 	const handleChange = (id, field, value) => {
-		const updatedData = [...formData];
-
-		// Ensure that the object for this symptom exists in the array
-		if (!updatedData[id]) {
-			updatedData[id] = {};
-		}
-
-		updatedData[id][field] = value;
-		setFormData(updatedData);
+		symptom[field] = value;
 	};
-	const defaultValue = null;
 
 	return (
 		<>
@@ -72,17 +61,13 @@ const SymptonItem = ({ symptom }) => {
 					<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 						<div className="w-full">
 							<div className="relative mb-3 mt-5">
-								<label className=" text-xs absolute top-[-10px] px-2 bg-white right-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
+								<label className="text-xs absolute top-[-10px] px-2 bg-white right-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 									تاریخ شروع
 								</label>
 								<div className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary">
 									<DatePicker
 										locale="fa"
-										value={
-											formData[symptom.id]?.OnsetDate
-												? showingDate(symptom.id)
-												: defaultValue
-										}
+										value={date}
 										onChange={(e) => {
 											const date = new Date(
 												moment.from(
@@ -90,8 +75,10 @@ const SymptonItem = ({ symptom }) => {
 													"fa"
 													// "YYYY/MM/DD"
 												)
-											);
+											).toString();
+
 											handleChange(symptom.id, "OnsetDate", date);
+											updateSelectedDate();
 										}}
 										shouldHighlightWeekends
 									/>
@@ -101,7 +88,7 @@ const SymptonItem = ({ symptom }) => {
 						<div className="w-full grid grid-cols-2 gap-4">
 							<div className="relative mb-3 mt-5">
 								<select
-									value={formData[symptom.id]?.DurationTypeId}
+									value={symptom.DurationTypeId}
 									onChange={(e) =>
 										handleChange(symptom.id, "severity", e.target.value)
 									}
@@ -127,7 +114,7 @@ const SymptonItem = ({ symptom }) => {
 							<div className="relative mb-3 mt-5">
 								<input
 									type="number"
-									value={formData[symptom.id]?.DurationTypeId}
+									value={symptom.DurationTypeId}
 									onChange={(e) =>
 										handleChange(symptom.id, "duration", e.target.value)
 									}
@@ -141,7 +128,7 @@ const SymptonItem = ({ symptom }) => {
 						<div className="w-full">
 							<div className="relative mb-3 mt-5">
 								<select
-									value={formData[symptom.id]?.IntensityTitle}
+									value={symptom.IntensityTitle}
 									onChange={(e) =>
 										handleChange(symptom.id, "severity", e.target.value)
 									}
@@ -160,16 +147,20 @@ const SymptonItem = ({ symptom }) => {
 						<div className="w-full">
 							<div className="relative mb-3 mt-5">
 								<select
-									value={formData[symptom.id]?.OnsetDate}
+									value={symptom.InterventionResultId}
 									onChange={(e) =>
-										handleChange(symptom.id, "actionsTaken", e.target.value)
+										handleChange(
+											symptom.id,
+											"InterventionResultId",
+											e.target.value
+										)
 									}
 									className=" text-xs peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 								>
 									<option value="">یک مورد را انتخاب کنید</option>
 									{interventionResultId?.map((el) => {
 										return <option value={el.Id}>{el.PersianTitle}</option>;
-									})}{" "}
+									})}
 								</select>
 								<label className=" text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 									اقدام انجام شده
@@ -180,7 +171,7 @@ const SymptonItem = ({ symptom }) => {
 					<div className="">
 						<textarea
 							placeholder="توضیحات"
-							value={formData[symptom.id]?.OnsetDates}
+							value={symptom.OnsetDates}
 							onChange={(e) =>
 								handleChange(symptom.id, "notes", e.target.value)
 							}
