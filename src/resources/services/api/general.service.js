@@ -35,7 +35,7 @@ export const generalApi = apiInstance.injectEndpoints({
 		createAdverseEvent: builder.mutation({
 			query: (data) => {
 				return {
-					url: `adverse-event/create?studyId=31&nationalCode=0074544698`,
+					url: `adverse-event/create?phoneNumber=09025555404&nationalCode=0074544698`,
 					method: "post",
 					data,
 				};

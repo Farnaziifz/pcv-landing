@@ -32,17 +32,7 @@ const SymptonItem = ({ symptom }) => {
 
 	const updateSelectedDate = () => {
 		if (symptom.OnsetDate) {
-			const m = moment(symptom.OnsetDate)?.format("jYYYY/jM/jD").split("/");
-			const year = +m[0];
-			const month = +m[1];
-			const day = +m[2];
-
-			const dateObject = {
-				year,
-				month,
-				day,
-			};
-			setDate(dateObject);
+			setDate(symptom.OnsetDate);
 		} else {
 			return null;
 		}
@@ -67,17 +57,9 @@ const SymptonItem = ({ symptom }) => {
 								<div className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary">
 									<DatePicker
 										locale="fa"
-										value={date}
+										value={symptom.OnsetDate}
 										onChange={(e) => {
-											const date = new Date(
-												moment.from(
-													`${e.year}/${e.month}/${e.day}`,
-													"fa"
-													// "YYYY/MM/DD"
-												)
-											).toString();
-
-											handleChange(symptom.id, "OnsetDate", date);
+											handleChange(symptom.id, "OnsetDate", e);
 											updateSelectedDate();
 										}}
 										shouldHighlightWeekends
@@ -90,7 +72,7 @@ const SymptonItem = ({ symptom }) => {
 								<select
 									value={symptom.DurationTypeId}
 									onChange={(e) =>
-										handleChange(symptom.id, "severity", e.target.value)
+										handleChange(symptom.id, "DurationTypeId", e.target.value)
 									}
 									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary text-xs py-3"
 								>
@@ -114,9 +96,9 @@ const SymptonItem = ({ symptom }) => {
 							<div className="relative mb-3 mt-5">
 								<input
 									type="number"
-									value={symptom.DurationTypeId}
+									value={symptom.DurationValue}
 									onChange={(e) =>
-										handleChange(symptom.id, "duration", e.target.value)
+										handleChange(symptom.id, "DurationValue", e.target.value)
 									}
 									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
@@ -136,7 +118,11 @@ const SymptonItem = ({ symptom }) => {
 								>
 									<option value="">یک مورد را انتخاب کنید</option>
 									{insentitiesSeverity?.map((el) => {
-										return <option value={el.value}>{el.label}</option>;
+										return (
+											<option value={`${el.value}-${el.level}`}>
+												{el.label}
+											</option>
+										);
 									})}
 								</select>
 								<label className="text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
