@@ -76,7 +76,7 @@ const SymptonItem = ({ symptom }) => {
 									}
 									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary text-xs py-3"
 								>
-									<option value="" disabled className="text-xs">
+									<option value="" className="text-xs">
 										یک مورد را انتخاب کنید
 									</option>
 									<option value="1" className="text-sm">
@@ -100,6 +100,11 @@ const SymptonItem = ({ symptom }) => {
 									onChange={(e) =>
 										handleChange(symptom.id, "DurationValue", e.target.value)
 									}
+									style={{
+										appearance: "textfield",
+										mozAppearance: "textfield",
+										webkitAppearance: "none",
+									}}
 									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
 								<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">

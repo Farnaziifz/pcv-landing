@@ -6,17 +6,26 @@ function AdverseEventForm() {
 	const [rows, setRows] = useState([
 		{
 			adverseEvent: "",
-			startDate: "",
+			startDate: null,
 			duration: "",
 			severity: "",
 			actionsTaken: "",
 			notes: "",
+			intensities: "",
+			id: Math.floor(Math.random() * 10000),
 		},
 	]);
 
-	const handleChange = (index, field, value) => {
-		const newRows = [...rows];
-		newRows[index][field] = value;
+	const handleChange = (id, field, value) => {
+		const newRows = rows.map((row) => {
+			if (row.id === id) {
+				return {
+					...row,
+					[field]: value,
+				};
+			}
+			return row;
+		});
 		setRows(newRows);
 	};
 
@@ -25,36 +34,24 @@ function AdverseEventForm() {
 			...rows,
 			{
 				adverseEvent: "",
-				startDate: "",
+				startDate: null,
 				duration: "",
 				severity: "",
 				actionsTaken: "",
 				notes: "",
+				intensities: "",
+				id: Math.floor(Math.random() * 10000),
 			},
 		]);
 	};
 
-	const handleSubmit = async () => {
-		try {
-			// Replace with your backend API endpoint
-			const response = await fetch("https://your-backend-api.com/submit", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ rows }),
-			});
+	const removeRow = (id) => {
+		const filteredRows = rows.filter((row) => row.id !== id);
+		setRows(filteredRows);
+	};
 
-			if (response.ok) {
-				alert("Form submitted successfully!");
-				// Optionally, reset the form here
-			} else {
-				alert("Failed to submit form");
-			}
-		} catch (error) {
-			console.error("Error submitting form:", error);
-			alert("An error occurred while submitting the form");
-		}
+	const handleSubmit = async () => {
+		console.log(rows);
 	};
 
 	return (
@@ -66,113 +63,136 @@ function AdverseEventForm() {
 					عارضه را در جدول ذیل وارد نمایید:
 				</div>
 
-				{rows.map((row, index) => (
-					<div
-						key={index}
-						className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
-					>
-						<div className="relative">
-							<select
-								value={row.adverseEvent}
-								onChange={(e) =>
-									handleChange(index, "adverseEvent", e.target.value)
-								}
-								className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-							>
-								<option value="" disabled>
-									یک مورد را انتخاب کنید
-								</option>
-								<option value="درد محل تزریق">درد محل تزریق</option>
-								<option value="سفتی محل تزریق">سفتی محل تزریق</option>
-								<option value="تورم محل تزریق">تورم محل تزریق</option>
-								{/* Add other options as needed */}
-							</select>
-							<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
-								رخداد نامطلوب
-							</label>
-						</div>
-
-						<div className="relative">
-							<div className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary">
-								<DatePicker
-									locale="fa"
-									value={row.startDate}
-									onChange={(e) =>
-										handleChange(index, "startDate", e.target.value)
-									}
-									shouldHighlightWeekends
-								/>
+				{rows.map((row) => (
+					<div className="grid grid-cols-1 md:grid-cols-1 gap-4" key={row.id}>
+						{rows.length > 1 ? (
+							<div className="w-full flex justify-end">
+								<button
+									onClick={() => removeRow(row.id)}
+									className="bg-red-500 text-white py-1 px-1 rounded-md mt-1 text-xs flex justify-center items-center"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+									>
+										<path
+											fill="currentColor"
+											d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 8.4l3.6 3.6L7 15.6zm3.6 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"
+										/>
+									</svg>{" "}
+								</button>
 							</div>
-							<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
-								تاریخ شروع
-							</label>
+						) : (
+							""
+						)}
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="w-full mb-3">
+								<div className="relative">
+									<input
+										type="text"
+										placeholder=" "
+										value={row.intensities}
+										onChange={(e) =>
+											handleChange(row.id, "intensities", e.target.value)
+										}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									/>
+									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+										رخداد نامطلوب
+									</label>
+								</div>
+							</div>
+							<div className="w-full mb-3">
+								<div className="relative w-full">
+									<div className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary">
+										<DatePicker
+											locale="fa"
+											value={row.startDate}
+											onChange={(value) =>
+												handleChange(row.id, "startDate", value)
+											}
+											shouldHighlightWeekends
+										/>
+									</div>
+									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
+										تاریخ شروع
+									</label>
+								</div>
+							</div>
+							<div className="w-full mb-3">
+								<div className="relative">
+									<input
+										type="text"
+										value={row.duration}
+										onChange={(e) =>
+											handleChange(row.id, "duration", e.target.value)
+										}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									/>
+									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+										طول مدت رخداد
+									</label>
+								</div>
+							</div>
+							<div className="w-full mb-3">
+								<div className="relative">
+									<select
+										value={row.severity}
+										onChange={(e) =>
+											handleChange(row.id, "severity", e.target.value)
+										}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									>
+										<option value="" disabled className="text-sm">
+											یک مورد را انتخاب کنید
+										</option>
+										<option value="خفیف">خفیف</option>
+										<option value="متوسط">متوسط</option>
+										<option value="شدید">شدید</option>
+									</select>
+									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+										شدت رخداد
+									</label>
+								</div>
+							</div>
+							<div className="w-full mb-3">
+								<div className="relative">
+									<select
+										value={row.actionsTaken}
+										onChange={(e) =>
+											handleChange(row.id, "actionsTaken", e.target.value)
+										}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									>
+										<option value="" disabled>
+											یک مورد را انتخاب کنید
+										</option>
+										<option value="اقدام نشده">اقدام نشده</option>
+										<option value="درمان دارویی">درمان دارویی</option>
+										<option value="درمان غیر دارویی">درمان غیر دارویی</option>
+									</select>
+									<label className="absolute right-2 bg-white  top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
+										اقدام انجام شده
+									</label>
+								</div>
+							</div>
 						</div>
-
-						<div className="relative">
-							<input
-								type="text"
-								placeholder=" "
-								value={row.duration}
-								onChange={(e) =>
-									handleChange(index, "duration", e.target.value)
-								}
-								className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-							/>
-							<label className="absolute right-2 bg-white  top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
-								طول مدت رخداد
-							</label>
-						</div>
-
-						<div className="relative">
-							<select
-								value={row.severity}
-								onChange={(e) =>
-									handleChange(index, "severity", e.target.value)
-								}
-								className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-							>
-								<option value="" disabled className="text-sm">
-									یک مورد را انتخاب کنید
-								</option>
-								<option value="خفیف">خفیف</option>
-								<option value="متوسط">متوسط</option>
-								<option value="شدید">شدید</option>
-							</select>
-							<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
-								شدت رخداد
-							</label>
-						</div>
-
-						<div className="relative">
-							<select
-								value={row.actionsTaken}
-								onChange={(e) =>
-									handleChange(index, "actionsTaken", e.target.value)
-								}
-								className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-							>
-								<option value="" disabled>
-									یک مورد را انتخاب کنید
-								</option>
-								<option value="اقدام نشده">اقدام نشده</option>
-								<option value="درمان دارویی">درمان دارویی</option>
-								<option value="درمان غیر دارویی">درمان غیر دارویی</option>
-							</select>
-							<label className="absolute right-2 bg-white  top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
-								اقدام انجام شده
-							</label>
-						</div>
-
-						<div className="relative col-span-2">
-							<textarea
-								placeholder=" "
-								value={row.notes}
-								onChange={(e) => handleChange(index, "notes", e.target.value)}
-								className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-							/>
-							<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
-								توضیحات
-							</label>
+						<div className="w-full mb-3">
+							<div className="relative ">
+								<textarea
+									placeholder=" "
+									value={row.notes}
+									onChange={(e) =>
+										handleChange(row.id, "notes", e.target.value)
+									}
+									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+								/>
+								<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+									توضیحات
+								</label>
+							</div>
 						</div>
 					</div>
 				))}
