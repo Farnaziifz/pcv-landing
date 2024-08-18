@@ -67,27 +67,21 @@ function SymptomSolitedForm() {
 	const submitForm = () => {
 		const finalData = selectedSymptoms.map((symptom) => {
 			const data = formData[symptom.id] || {};
-
+			const nowDate = new Date();
 			return {
-				lltId: symptom.id, // Assuming `symptom.id` corresponds to `lltId`
-				lltTitle: symptom.enTitle, // Using the label from the selected symptoms
-				IntensityTitle: data.severity || "", // Mapping severity
-				IntensityValue: mapSeverityToValue(data.severity), // Convert severity to the corresponding value
-				DurationTypeId: mapDurationToId(data.durationType), // Map the duration type to the corresponding ID
-				DurationValue: data.duration || "", // The duration value
-				OnsetDate: formatOnsetDate(data.OnsetDate), // Convert to the correct date format
-				Description: data.notes || "", // Description field
-				InterventionResultId: mapInterventionToId(data.actionsTaken), // Map actionsTaken to the corresponding ID
+				lltId: symptom.id,
+				lltTitle: symptom.enTitle,
+				IntensityTitle: data.severity || "",
+				IntensityValue: mapSeverityToValue(data.severity),
+				DurationTypeId: mapDurationToId(data.durationType),
+				DurationValue: data.duration || "",
+				OnsetDate: formatOnsetDate(data.OnsetDate) || nowDate.getDate(),
+				Description: data.notes || "",
+				InterventionResultId: mapInterventionToId(data.actionsTaken),
 			};
 		});
 
-		// Now send `finalData` to the backend
-		console.log(finalData); // For debugging
-
-		// Example API call
-		// api.post('/your-endpoint', finalData)
-		//     .then(response => console.log('Data submitted successfully', response))
-		//     .catch(error => console.error('Error submitting data', error));
+		console.log(finalData);
 	};
 	return (
 		<div className="mt-15">

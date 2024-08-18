@@ -25,6 +25,13 @@ export const generalApi = apiInstance.injectEndpoints({
 				};
 			},
 		}),
+		getInterventionResult: builder.query({
+			query: () => {
+				return {
+					url: `interventions-result`,
+				};
+			},
+		}),
 	}),
 });
 
@@ -32,4 +39,5 @@ export const {
 	useRegisterUserMutation,
 	useGetSolicitedSsymptomsQuery,
 	useLazyGetIntensitiesQuery,
+	useGetInterventionResultQuery,
 } = generalApi;

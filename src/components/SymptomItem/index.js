@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import moment from "jalali-moment";
-import { useLazyGetIntensitiesQuery } from "../../resources/services/api/general.service";
+import {
+	useLazyGetIntensitiesQuery,
+	useGetInterventionResultQuery,
+} from "../../resources/services/api/general.service";
 
 const SymptonItem = ({ symptom }) => {
-	console.log("mareza", symptom);
 	const [formData, setFormData] = useState([{}]);
 
 	const [fetch, { data }] = useLazyGetIntensitiesQuery({ id: symptom.id });
+	const { data: interventionResultId } = useGetInterventionResultQuery();
 	const [insentitiesSeverity, setInsentitiesSeverity] = useState([]);
 
 	useEffect(() => {
@@ -16,14 +19,16 @@ const SymptonItem = ({ symptom }) => {
 	}, [symptom.id]);
 
 	useEffect(() => {
-		data?.map((el) => {
-			insentitiesSeverity.push({
+		setInsentitiesSeverity([]);
+		const test = data?.map((el) => {
+			return {
 				id: el.Id,
 				value: el.Title,
 				label: el.PersianTitle,
 				level: el.Level,
-			});
+			};
 		});
+		setInsentitiesSeverity(test);
 	}, [data]);
 	const showingDate = (id) => {
 		if (formData[id]?.OnsetDate) {
@@ -105,13 +110,13 @@ const SymptonItem = ({ symptom }) => {
 									<option value="" disabled className="text-xs">
 										یک مورد را انتخاب کنید
 									</option>
-									<option value="ساعت" className="text-sm">
+									<option value="1" className="text-sm">
 										ساعت
 									</option>
-									<option value="روز" className="text-xs">
+									<option value="2" className="text-xs">
 										روز
 									</option>
-									<option value="مداوم" className="text-xs">
+									<option value="3" className="text-xs">
 										مداوم
 									</option>
 								</select>
@@ -121,8 +126,7 @@ const SymptonItem = ({ symptom }) => {
 							</div>
 							<div className="relative mb-3 mt-5">
 								<input
-									type="text"
-									placeholder=" "
+									type="number"
 									value={formData[symptom.id]?.DurationTypeId}
 									onChange={(e) =>
 										handleChange(symptom.id, "duration", e.target.value)
@@ -141,18 +145,12 @@ const SymptonItem = ({ symptom }) => {
 									onChange={(e) =>
 										handleChange(symptom.id, "severity", e.target.value)
 									}
-									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									className="text-xs peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 								>
-									<option value="" disabled>
-										یک مورد را انتخاب کنید
-									</option>
+									<option value="">یک مورد را انتخاب کنید</option>
 									{insentitiesSeverity?.map((el) => {
-										console.log(el);
 										return <option value={el.value}>{el.label}</option>;
 									})}
-									{/* <option value="Grad 1">خفیف</option>
-									<option value="Grad 2">متوسط</option>
-									<option value="Grad 3">شدید</option> */}
 								</select>
 								<label className="text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 									شدت رخداد
@@ -166,14 +164,12 @@ const SymptonItem = ({ symptom }) => {
 									onChange={(e) =>
 										handleChange(symptom.id, "actionsTaken", e.target.value)
 									}
-									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									className=" text-xs peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 								>
-									<option value="" disabled>
-										یک مورد را انتخاب کنید
-									</option>
-									<option value="اقدام نشده">اقدام نشده</option>
-									<option value="درمان دارویی">درمان دارویی</option>
-									<option value="درمان غیر دارویی">درمان غیر دارویی</option>
+									<option value="">یک مورد را انتخاب کنید</option>
+									{interventionResultId?.map((el) => {
+										return <option value={el.Id}>{el.PersianTitle}</option>;
+									})}{" "}
 								</select>
 								<label className=" text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 									اقدام انجام شده
