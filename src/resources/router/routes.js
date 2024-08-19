@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import Login from "../../views/Login/Login";
 import Form from "../../views/Forms/Forms";
+import FinishedPgae from "../../views/FinishedPage";
 
 const routes = [
 	{
@@ -14,6 +15,10 @@ const routes = [
 	{
 		path: "forms/:formType",
 		element: <Form />,
+	},
+	{
+		path: "finished",
+		element: <FinishedPgae />,
 	},
 ];
 

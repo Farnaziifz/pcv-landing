@@ -1,5 +1,4 @@
 import { apiInstance } from "../index";
-console.log("ss", window.localStorage.nationalId);
 export const generalApi = apiInstance.injectEndpoints({
 	endpoints: (builder) => ({
 		registerUser: builder.mutation({

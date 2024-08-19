@@ -59,25 +59,29 @@ function AdverseEventForm() {
 	};
 
 	const handleSubmit = async () => {
-		console.log(Date.now());
 		const changed = rows.map((el) => {
 			const model = {
 				InterventionResultId: el.InterventionResultId
 					? +el.InterventionResultId
 					: "",
-				OnsetDate: el.startDate?.year
-					? moment
-							.from(
-								`${el.startDate?.year}/${el.startDate?.month}/${el.startDate?.day}`,
-								"fa",
-								"YYYY/MM/DD"
-							)
-							.locale("en")
-							.format("YYYY-MM-DDTHH:mm:ss")
-					: moment
-							.from(Date.now(), "", '"YYYY/MM/DD"')
-							.locale("en")
-							.format("YYYY-MM-DDTHH:mm:ss"),
+				OnsetDate: (() => {
+					if (
+						!el.OnsetDate?.year ||
+						!el.OnsetDate?.month ||
+						!el.OnsetDate?.day
+					) {
+						return moment().format("YYYY-MM-DDTHH:mm:ss");
+					}
+
+					return moment
+						.from(
+							`${el.OnsetDate.year}/${el.OnsetDate.month}/${el.OnsetDate.day}`,
+							"fa",
+							"YYYY/MM/DD"
+						)
+						.locale("en")
+						.format("YYYY-MM-DDTHH:mm:ss");
+				})(),
 				DurationValue: el.DurationValue ? +el.DurationValue : "",
 				DurationTypeId: el.DurationTypeId ? +el.DurationTypeId : "",
 				Description: `درخداد نامطلوب: ${el.intensities} - توضیحات: ${el.notes}`,

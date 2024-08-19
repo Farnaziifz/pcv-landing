@@ -11,7 +11,7 @@ const SymptonItem = ({ symptom }) => {
 	const { data: interventionResultId } = useGetInterventionResultQuery();
 	const [insentitiesSeverity, setInsentitiesSeverity] = useState([]);
 	const [date, setDate] = useState();
-
+	const [showDurationValue, setShowDuration] = useState(false);
 	useEffect(() => {
 		fetch({ id: symptom.id });
 	}, [symptom.id]);
@@ -37,6 +37,8 @@ const SymptonItem = ({ symptom }) => {
 		}
 	};
 	const handleChange = (id, field, value) => {
+		if (field === "DurationTypeId" && value != 3) setShowDuration(true);
+		else setShowDuration(false);
 		symptom[field] = value;
 	};
 
@@ -66,6 +68,28 @@ const SymptonItem = ({ symptom }) => {
 								</div>
 							</div>
 						</div>
+						{symptom.enTitle === "Fever" ? (
+							<div className="relative mb-3 mt-5">
+								<input
+									type="number"
+									value={symptom.feverDegree}
+									onChange={(e) =>
+										handleChange(symptom.id, "feverDegree", e.target.value)
+									}
+									style={{
+										appearance: "textfield",
+										mozAppearance: "textfield",
+										webkitAppearance: "none",
+									}}
+									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+								/>
+								<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
+									درجه تب
+								</label>
+							</div>
+						) : (
+							""
+						)}
 						<div className="w-full grid grid-cols-2 gap-4">
 							<div className="relative mb-3 mt-5">
 								<select
@@ -89,27 +113,31 @@ const SymptonItem = ({ symptom }) => {
 									</option>
 								</select>
 								<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
-									واحد زمان رخداد
+									واحد زمان عارضه
 								</label>
 							</div>
-							<div className="relative mb-3 mt-5">
-								<input
-									type="number"
-									value={symptom.DurationValue}
-									onChange={(e) =>
-										handleChange(symptom.id, "DurationValue", e.target.value)
-									}
-									style={{
-										appearance: "textfield",
-										mozAppearance: "textfield",
-										webkitAppearance: "none",
-									}}
-									className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
-								/>
-								<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
-									طول مدت رخداد
-								</label>
-							</div>
+							{showDurationValue ? (
+								<div className="relative mb-3 mt-5">
+									<input
+										type="number"
+										value={symptom.DurationValue}
+										onChange={(e) =>
+											handleChange(symptom.id, "DurationValue", e.target.value)
+										}
+										style={{
+											appearance: "textfield",
+											mozAppearance: "textfield",
+											webkitAppearance: "none",
+										}}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+									/>
+									<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
+										طول مدت عارضه
+									</label>
+								</div>
+							) : (
+								""
+							)}
 						</div>
 						<div className="w-full">
 							<div className="relative mb-3 mt-5">
@@ -130,7 +158,7 @@ const SymptonItem = ({ symptom }) => {
 									})}
 								</select>
 								<label className="text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
-									شدت رخداد
+									شدت عارضه
 								</label>
 							</div>
 						</div>
@@ -153,7 +181,7 @@ const SymptonItem = ({ symptom }) => {
 									})}
 								</select>
 								<label className=" text-xs bg-white absolute right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
-									اقدام انجام شده
+									اقدام انجام شده در جهت کنترل عارضه
 								</label>
 							</div>
 						</div>

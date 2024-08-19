@@ -29,14 +29,14 @@ function Login() {
 		<main className="w-[360px] mt-10 p-6 bg-white shadow-md rounded-md">
 			<div className="flex flex-col space-y-4">
 				<input
-					type="text"
+					type="number"
 					placeholder="کد ملی"
 					value={nationalId}
 					onChange={(e) => setNationalId(e.target.value)}
 					className="p-2 border border-blue-500 rounded-md"
 				/>
 				<input
-					type="text"
+					type="number"
 					placeholder="شماره موبایل"
 					value={mobileNumber}
 					onChange={(e) => setMobileNumber(e.target.value)}
