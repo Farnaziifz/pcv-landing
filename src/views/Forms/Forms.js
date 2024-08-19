@@ -7,7 +7,6 @@ function Forms() {
 	const [isSolited, setIsSolited] = useState(true);
 	const params = useParams();
 	useEffect(() => {
-		console.log(params.formType);
 		params.formType == 0 ? setIsSolited(true) : setIsSolited(false);
 	}, [params.formType]);
 	return (

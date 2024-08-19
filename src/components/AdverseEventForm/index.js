@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
+import {
+	useGetInterventionResultQuery,
+	useCreateAdverseEventMutation,
+} from "../../resources/services/api/general.service";
+import moment from "jalali-moment";
 
 function AdverseEventForm() {
+	const { data: interventionResultId } = useGetInterventionResultQuery();
+	const [create] = useCreateAdverseEventMutation();
+
 	const [rows, setRows] = useState([
 		{
 			adverseEvent: "",
@@ -51,12 +59,38 @@ function AdverseEventForm() {
 	};
 
 	const handleSubmit = async () => {
-		console.log(rows);
+		console.log(Date.now());
+		const changed = rows.map((el) => {
+			const model = {
+				InterventionResultId: el.InterventionResultId
+					? +el.InterventionResultId
+					: "",
+				OnsetDate: el.startDate?.year
+					? moment
+							.from(
+								`${el.startDate?.year}/${el.startDate?.month}/${el.startDate?.day}`,
+								"fa",
+								"YYYY/MM/DD"
+							)
+							.locale("en")
+							.format("YYYY-MM-DDTHH:mm:ss")
+					: moment
+							.from(Date.now(), "", '"YYYY/MM/DD"')
+							.locale("en")
+							.format("YYYY-MM-DDTHH:mm:ss"),
+				DurationValue: el.DurationValue ? +el.DurationValue : "",
+				DurationTypeId: el.DurationTypeId ? +el.DurationTypeId : "",
+				Description: `درخداد نامطلوب: ${el.intensities} - توضیحات: ${el.notes}`,
+				IntensityValue: el.severity ? +el.severity : "",
+			};
+			return model;
+		});
+		create(changed);
 	};
 
 	return (
 		<>
-			<div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-sm rounded-md">
+			<div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-sm rounded-md ">
 				<div className="text-center text-red-500 font-bold mb-6">
 					در صورتی که رخداد نامطلوبی تجربه کردید لطفا شرح عارضه با ذکر دقیق
 					تاریخ شروع علائم، طول مدت عارضه و اقدامات درمانی انجام شده جهت کاهش
@@ -99,7 +133,7 @@ function AdverseEventForm() {
 										}
 										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 									/>
-									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+									<label className="text-xs absolute right-2 bg-white top-[-10px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] px-2 peer-placeholder-shown:text-gray-400">
 										رخداد نامطلوب
 									</label>
 								</div>
@@ -116,22 +150,52 @@ function AdverseEventForm() {
 											shouldHighlightWeekends
 										/>
 									</div>
-									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
+									<label className="text-xs absolute right-2 bg-white top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 										تاریخ شروع
 									</label>
 								</div>
 							</div>
-							<div className="w-full mb-3">
-								<div className="relative">
-									<input
-										type="text"
-										value={row.duration}
+							<div className="w-full mb-3 grid grid-cols-2 gap-4">
+								<div className="relative mb-3 ">
+									<select
+										value={row.DurationTypeId}
 										onChange={(e) =>
-											handleChange(row.id, "duration", e.target.value)
+											handleChange(row.id, "DurationTypeId", e.target.value)
 										}
+										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary text-xs py-3"
+									>
+										<option value="" className="text-xs">
+											یک مورد را انتخاب کنید
+										</option>
+										<option value="1" className="text-sm">
+											ساعت
+										</option>
+										<option value="2" className="text-xs">
+											روز
+										</option>
+										<option value="3" className="text-xs">
+											مداوم
+										</option>
+									</select>
+									<label className=" text-xs px-2 absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
+										واحد زمان رخداد
+									</label>
+								</div>
+								<div className="relative mb-3">
+									<input
+										type="number"
+										value={row.DurationValue}
+										onChange={(e) =>
+											handleChange(row.id, "DurationValue", e.target.value)
+										}
+										style={{
+											appearance: "textfield",
+											mozAppearance: "textfield",
+											webkitAppearance: "none",
+										}}
 										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 									/>
-									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+									<label className=" text-xs absolute bg-white right-2 top-[-10px] px-2 text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-10px] peer-placeholder-shown:text-gray-400">
 										طول مدت رخداد
 									</label>
 								</div>
@@ -143,16 +207,16 @@ function AdverseEventForm() {
 										onChange={(e) =>
 											handleChange(row.id, "severity", e.target.value)
 										}
-										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+										className="text-xs peer p-3 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 									>
 										<option value="" disabled className="text-sm">
 											یک مورد را انتخاب کنید
 										</option>
-										<option value="خفیف">خفیف</option>
-										<option value="متوسط">متوسط</option>
-										<option value="شدید">شدید</option>
+										<option value="1">خفیف</option>
+										<option value="2">متوسط</option>
+										<option value="3">شدید</option>
 									</select>
-									<label className="absolute right-2 bg-white top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
+									<label className="px-2 text-xs absolute right-2 bg-white top-[-10px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-[-15px] peer-placeholder-shown:text-gray-400">
 										شدت رخداد
 									</label>
 								</div>
@@ -160,20 +224,22 @@ function AdverseEventForm() {
 							<div className="w-full mb-3">
 								<div className="relative">
 									<select
-										value={row.actionsTaken}
+										value={row.InterventionResultId}
 										onChange={(e) =>
-											handleChange(row.id, "actionsTaken", e.target.value)
+											handleChange(
+												row.id,
+												"InterventionResultId",
+												e.target.value
+											)
 										}
-										className="peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+										className=" text-xs peer p-2 border border-primary rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
 									>
-										<option value="" disabled>
-											یک مورد را انتخاب کنید
-										</option>
-										<option value="اقدام نشده">اقدام نشده</option>
-										<option value="درمان دارویی">درمان دارویی</option>
-										<option value="درمان غیر دارویی">درمان غیر دارویی</option>
+										<option value="">یک مورد را انتخاب کنید</option>
+										{interventionResultId?.map((el) => {
+											return <option value={el.Id}>{el.PersianTitle}</option>;
+										})}
 									</select>
-									<label className="absolute right-2 bg-white  top-[-15px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
+									<label className="text-xs px-2 absolute right-2 bg-white  top-[-10px] text-gray-500 transition-all peer-focus:text-primary peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400">
 										اقدام انجام شده
 									</label>
 								</div>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
-import moment from "jalali-moment";
 import {
 	useLazyGetIntensitiesQuery,
 	useGetInterventionResultQuery,

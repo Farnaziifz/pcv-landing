@@ -1,5 +1,5 @@
 import { apiInstance } from "../index";
-
+console.log("ss", window.localStorage.nationalId);
 export const generalApi = apiInstance.injectEndpoints({
 	endpoints: (builder) => ({
 		registerUser: builder.mutation({
@@ -35,7 +35,7 @@ export const generalApi = apiInstance.injectEndpoints({
 		createAdverseEvent: builder.mutation({
 			query: (data) => {
 				return {
-					url: `adverse-event/create?phoneNumber=09025555404&nationalCode=0074544698`,
+					url: `adverse-event/create?phoneNumber=${window.localStorage.phoneNumber}&nationalCode=${window.localStorage.nationalId}`,
 					method: "post",
 					data,
 				};

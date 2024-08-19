@@ -15,6 +15,8 @@ function Login() {
 				phoneNumber: mobileNumber,
 				nationalCode: nationalId,
 			}).unwrap();
+			window.localStorage.setItem("phoneNumber", mobileNumber);
+			window.localStorage.setItem("nationalId", nationalId);
 
 			const { FormType } = response;
 

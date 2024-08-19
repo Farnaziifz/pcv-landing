@@ -32,7 +32,7 @@ function SymptomSolitedForm() {
 				InterventionResultId: +el.InterventionResultId,
 				OnsetDate: moment
 					.from(
-						`${el.OnsetDate.year}/${el.OnsetDate.month}/${el.OnsetDate.day}`,
+						`${el.OnsetDate?.year}/${el.OnsetDate?.month}/${el.OnsetDate?.day}`,
 						"fa",
 						"YYYY/MM/DD"
 					)
