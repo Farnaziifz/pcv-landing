@@ -1,0 +1,16 @@
+# docker-compose.yaml
+version: "3.8"
+
+services:
+  pcv-frontend:
+    image: pcv-frontend:latest
+    container_name: pcv-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - goals-net
+    ports:
+      - 3000:80
+
+

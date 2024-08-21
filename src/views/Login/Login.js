@@ -10,20 +10,30 @@ function Login() {
 	const [registerUser] = useRegisterUserMutation();
 
 	const handleSubmit = async () => {
-		try {
-			const response = await registerUser({
-				phoneNumber: mobileNumber,
-				nationalCode: nationalId,
-			}).unwrap();
-			window.localStorage.setItem("phoneNumber", mobileNumber);
-			window.localStorage.setItem("nationalId", nationalId);
+		if (checkMobile()) {
+			try {
+				const response = await registerUser({
+					phoneNumber: mobileNumber,
+					nationalCode: nationalId,
+				}).unwrap();
+				window.localStorage.setItem("phoneNumber", mobileNumber);
+				window.localStorage.setItem("nationalId", nationalId);
 
-			const { FormType } = response;
+				const { FormType } = response;
 
-			navigate(`/forms/${FormType}`, { state: { nationalId, mobileNumber } });
-		} catch (error) {
-			console.error("Failed to register user:", error);
+				navigate(`/forms/${FormType}`, { state: { nationalId, mobileNumber } });
+			} catch (error) {
+				console.error("Failed to register user:", error);
+			}
+		} else {
+			alert("شماره موبایل باید 11 رقم باشد و با 09 شروع شود");
 		}
+	};
+	const checkMobile = () => {
+		if (!/^09\d{9}$/.test(mobileNumber)) {
+			return false;
+		}
+		return true;
 	};
 	return (
 		<main className="w-[360px] mt-10 p-6 bg-white shadow-md rounded-md">
